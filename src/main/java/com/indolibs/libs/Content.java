@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.lang.StringBuilder;
 
-class Content<T> implements HttpHelper<T> {
+public class Content<T> implements HttpHelper<T> {
     private String strJson = "";
     private T value;
 
