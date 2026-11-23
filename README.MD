@@ -1,0 +1,1 @@
+[![](https://jitpack.io/v/1980suciono/HttpHandler2.svg)](https://jitpack.io/#1980suciono/HttpHandler2)
