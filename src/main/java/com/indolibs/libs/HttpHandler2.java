@@ -192,7 +192,7 @@ public class HttpHandler2 {
 		private boolean isAsync = false;
 		private boolean isFinished = false;
 		
-		HttpDataLoader(HttpHandler2 httpHandler2, String url, String[] headers, String[] dataPosting, String method) {
+		public HttpDataLoader(HttpHandler2 httpHandler2, String url, String[] headers, String[] dataPosting, String method) {
             this.httpHandler2 = httpHandler2;
             this.jsonStr = null;
             this.method = method;
