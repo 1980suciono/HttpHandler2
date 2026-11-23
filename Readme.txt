@@ -20,3 +20,4 @@ HttpHandler2\
 ├── settings.gradle
 ├── gradlew (Gradle Wrapper Linux)
 ├── gradlew.bat (Gradle Wrapper windows)
+└── .gitignore <-- supaya tidak disertakan saat push Folder build/ dan .gradle/
