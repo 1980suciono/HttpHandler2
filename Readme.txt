@@ -8,8 +8,8 @@ HttpHandler2\
 │       │   └── com 
 │       │       └── indolibs 
 │       │           └── libs
-                        ├── HttpHelper.java
-                        ├── Content.java
+│       │               ├── HttpHelper.java
+│       │               ├── Content.java
 │       │               └── HttpHandler2.java    <-- File kelas untuk logika & utilitas
 │       │
 │       └── resources/ 
