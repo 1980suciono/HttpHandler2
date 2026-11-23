@@ -1,29 +1,15 @@
 plugins {
-    id 'java-library' // <--- ganti 'com.android.library' untuk Android library
-    id 'maven-publish' // Wajib untuk JitPack
+    id 'java-library'
+    id 'maven-publish'
 }
 
-group = 'com.github.1980suciono' // ketentuan library jitpack.io sehingga penggunaanya dependencies adalah implementation 'com.github.1980suciono:HttpHandler2:1.0.0'
-// Menentukan Version
+group = 'com.github.1980suciono'
+
 version = '1.0.0'
 
 base {
     archivesName = 'HttpHandler2'
 }
-
-
-//android { //<---  Wajib ada untuk Android library
-//    namespace = 'com.indolibs.libs'
-//    compileSdk = 35
-//    defaultConfig {
-//        minSdk = 21
-//    }
-//   compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_17
-//        targetCompatibility = JavaVersion.VERSION_17
-//    }
-//}
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -40,23 +26,11 @@ repositories {
 
 dependencies {
 
-	// Jika Anda punya file .jar eksternal di folder libs
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
-	
-    // Tempel library baru Anda di sini via mavenCentral()
-    //implementation 'com.google.code.gson:gson:2.10.1'
-	
-	// Library GitHub via JitPack untuk manipulasi Excel
-    //implementation 'com.github.dhatim:fastexcel:0.15.3'
 	
 }
 
-//kalo ada file kembar Gabungkan atau sertakan saja semuanya (INCLUDE),
-//tasks.withType(AbstractCopyTask) {
-//    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-//}
 
-// Konfigurasi publikasi untuk JitPack
 publishing {
     publications {
         maven(MavenPublication) {
@@ -64,16 +38,3 @@ publishing {
         }
     }
 }
-
-//afterEvaluate { //<---  Memastikan konfigurasi android dan variant release sudah selesai di-evaluasi oleh Android Gradle Plugin
-//	publishing {
-//		publications {
-//			release(MavenPublication) {
-//				from components.release
-//				groupId = 'com.github.1980suciono'
-//				artifactId = 'HttpHandler2'
-//				version = '1.0.0'
-//			}
-//		}
-//	}
-//} 
