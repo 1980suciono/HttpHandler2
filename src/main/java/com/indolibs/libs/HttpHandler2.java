@@ -207,11 +207,13 @@ public class HttpHandler2 {
             try {
                 try {
                     this.jsonStr = this.httpHandler2.requestService(this.url, this.headers, this.dataPosting, this.method);
-                    if (this.httpHandler2.content != null) {
-                        this.httpHandler2.content.setStrObj(this.jsonStr);
-						state("{state : success}");
-                    }
-                    if (this.jsonStr == null) {
+                    if (this.jsonStr != null) {
+						if (this.httpHandler2.content != null&&this.jsonStr != null) {
+							this.httpHandler2.content.setStrObj(this.jsonStr);
+							state("{state : success}");
+						}
+						
+					}else{
                         state("{state : failed}");
                     }
                 } catch (Exception e) {
