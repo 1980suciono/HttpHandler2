@@ -17,10 +17,8 @@ java {
 }
 
 repositories {
-	//google() // <--- Wajib ada untuk Android library
     mavenCentral()
-	//JitPack adalah layanan yang bisa mengubah repository GitHub secara otomatis menjadi bisa dibaca oleh Gradle.
-	maven { url 'https://jitpack.io' } // <--- Biasanya, library dari GitHub menyediakan integrasi dengan layanan bernama JitPack. 
+	maven { url 'https://jitpack.io' } 
 	
 }
 
