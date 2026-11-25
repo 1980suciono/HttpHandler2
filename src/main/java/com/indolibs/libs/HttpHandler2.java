@@ -200,42 +200,51 @@ public class HttpHandler2 {
             this.dataPosting = dataPosting;
             this.url = url;
         }
-	
+		
+		private synchronized void startAndWaitCurrentThread() {
+			if (this.isWaiting) {
+				this.isWaiting = false;
+				start();
+			}
+			while (!this.isFinished) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					currentThread().interrupt();
+					System.err.println("Error: " + e.getMessage());
+					break;
+				}
+			}
+		}
 
         @Override
-        public synchronized void run() {
-            try {
-                try {
-                    this.jsonStr = this.httpHandler2.requestService(this.url, this.headers, this.dataPosting, this.method);
-                    if (this.jsonStr != null) {
-						if (this.httpHandler2.content != null&&this.jsonStr != null) {
-							this.httpHandler2.content.setStrObj(this.jsonStr);
-							state("{state : success}");
-						}
-						
-					}else{
-                        state("{state : failed}");
-                    }
-                } catch (Exception e) {
-                    state("{state : failed, message : "+e.getMessage()+"}");
-                }finally {
-					this.isFinished = true;
-					
-					if (this.isAsync && this.httpHandler2.content != null) {
-						this.httpHandler2.content.message(this.jsonStr);
-						this.isAsync=false;
-					}
-				
-					interrupt();
-					notifyAll();
-					
+        public void run() {
+			try {
+				this.jsonStr = this.httpHandler2.requestService(this.url, this.headers, this.dataPosting, this.method);
+				if (this.httpHandler2.content != null&&this.jsonStr != null) {
+						this.httpHandler2.content.setStrObj(this.jsonStr);
+						state("{state : success}");
+
+				}else{
+					state("{state : failed}");
 				}
-            } catch (Throwable th) {
-				this.isFinished = true;
-                interrupt();
-                notifyAll();
-                throw th;
-            }
+			} catch (Exception e) {
+				state("{state : failed, message : "+e.getMessage()+"}");
+			}finally {
+				
+				if (this.isAsync && this.httpHandler2.content != null) {
+					this.httpHandler2.content.message(this.jsonStr);
+					this.isAsync=false;
+				}
+
+				notifyAll();
+				synchronized (this) {
+					this.isFinished = true;
+					notifyAll();
+				}
+				
+			}
+
         }
 
 		@Override
@@ -244,16 +253,8 @@ public class HttpHandler2 {
 		}
 
         @Override
-		public synchronized T getValue() {
-			if (this.isWaiting) {
-				this.isWaiting = false;
-				start();
-				try {
-					wait();
-				} catch (Exception e) {
-					System.err.println("Error: " + e.getMessage());
-				}
-			}
+		public T getValue() {
+			startAndWaitCurrentThread();
 			return (this.httpHandler2.content != null) ? ((Content<T>)  this.httpHandler2.content).getValue() : null;
 		}
 		
@@ -264,7 +265,7 @@ public class HttpHandler2 {
             }
         }
 		
-		public HttpDataLoader executeOnBackground() {
+		public synchronized HttpDataLoader executeOnBackground() {
             if (this.isWaiting) {
                 this.isWaiting = false;
                 this.isAsync = true;
@@ -273,16 +274,8 @@ public class HttpHandler2 {
 			return this;
         }
 
-        public synchronized HttpDataLoader execute() {
-            if (this.isWaiting) {
-                this.isWaiting = false;
-                start();
-                try {
-                    wait();
-                } catch (Exception e) {
-					 System.err.println("Error: " + e.getMessage());
-                }
-            }
+        public HttpDataLoader execute() {
+            startAndWaitCurrentThread();
             message(this.jsonStr);
 			return this;
         }
@@ -297,32 +290,16 @@ public class HttpHandler2 {
 		}
 
         @Override
-        public synchronized void message(String str) {
-            if (this.isWaiting) {
-                this.isWaiting = false;
-                start();
-                try {
-                    wait();
-                } catch (Exception e) {
-					System.err.println("Error: " + e.getMessage());
-                }
-            }
+        public void message(String str) {
+            startAndWaitCurrentThread();
             if (this.httpHandler2.content != null) {
                 this.httpHandler2.content.message(str);
             }
         }
 
         @Override
-        public synchronized Object getStrObj() throws Exception {
-            if (this.isWaiting) {
-                this.isWaiting = false;
-                start();
-                try {
-                    wait();
-                } catch (Exception e) {
-					 System.err.println("Error: " + e.getMessage());
-                }
-            }
+        public Object getStrObj() throws Exception {
+            startAndWaitCurrentThread();
             return (this.httpHandler2.content != null) ? this.httpHandler2.content.getStrObj() : null;
         }
 
