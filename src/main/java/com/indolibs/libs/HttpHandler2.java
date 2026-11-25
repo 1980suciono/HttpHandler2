@@ -237,7 +237,6 @@ public class HttpHandler2 {
 					this.isAsync=false;
 				}
 
-				notifyAll();
 				synchronized (this) {
 					this.isFinished = true;
 					notifyAll();
