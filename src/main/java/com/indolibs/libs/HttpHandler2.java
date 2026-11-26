@@ -139,19 +139,28 @@ public class HttpHandler2 {
 
         @Override
         public void run() {
-            this.bytes = requestBytesService(this.url, this.headers, this.dataPosting, this.method);
+            try {
+			    this.bytes = requestBytesService(this.url, this.headers, this.dataPosting, this.method);
 			
-			if (this.bytes!=null && this.httpHandler2.content != null) {
-				setBytes(this.bytes);
-				this.httpHandler2.content.message(this.bytes);
-				this.httpHandler2.content.state("{state : success}");
+			    if (this.bytes != null) {
+			        setBytes(this.bytes);
+			    }
+			
+			    if (this.httpHandler2.content != null) {
+			        if (this.bytes != null) {
+			            this.httpHandler2.content.message(this.bytes);
+			            this.httpHandler2.content.state("{state : success}");
+			        } else {
+			            this.httpHandler2.content.state("{state : failed}");
+			        }
+			    }
+			} catch (Exception e) {
+			    if (this.httpHandler2.content != null) {
+			        this.httpHandler2.content.state("{state : failed, message : " + e.getMessage() + "}");
+			    }
+			} finally {
+			    this.isFinished = true;
 			}
-			
-			if (this.bytes == null) {
-				this.httpHandler2.content.state("{state : failed}");
-			}
-			
-			this.isFinished = true;
 			
         }
 
